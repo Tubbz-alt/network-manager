@@ -17,13 +17,29 @@ set -e
 #
 # If prerm fails during replacement due to conflict:
 #	<postinst> abort-remove in-favour <new-package> <version>
+create_networkmanager_conf_file(){
+        cat > /etc/NetworkManager/NetworkManager.conf<<EOF
+[main]
+plugins=ifupdown,keyfile
+
+[ifupdown]
+managed=true
+
+[device]
+wifi.scan-rand-mac-address=no
+
+[connectivity]
+uri=http://packages.deepin.com/misc/check_network_status.txt
+EOF
+}
+
 
 case "$1" in
     configure)
         # Create netdev group. Members of group netdev get access to the PolicyKit action
         # org.freedesktop.NetworkManager.settings.modify.system without prior authentication
         addgroup --quiet --system netdev
-
+	create_networkmanager_conf_file
         NIF=/etc/network/interfaces
         if [ -z "$2" ] && [ -f $NIF ]; then
             ifaces=`grep -v '^#' $NIF | awk '/iface/ {print $2}' | sort -u | sed -e 's/lo//' -e '/^$/d' -e 's/^/- /'`
