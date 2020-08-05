@@ -4,3 +4,4 @@ Force-online-state-with-unmanaged-devices.patch
 Don-t-setup-Sleep-Monitor-if-not-booted-with-systemd.patch
 Don-t-make-NetworkManager-D-Bus-activatable.patch
 deepin-nm-wifi-ap-update.patch
+fix-concheck-concheck-takes-too-long-time.patch
